@@ -1,0 +1,104 @@
+version: opening-v0.1
+start: enter
+emotion_options: [Curious, Uneasy, Hopeful, Confused, Unmoved]
+scenes:
+  enter:
+    id: enter
+    kind: narrative
+    text: 'A transmission is waiting. It appears to have been addressed to you.'
+    fragment: 'UNDELIVERED / TIME STAMP DAMAGED'
+    question: 'Open it?'
+    choices: [{id: enter, label: 'ENTER'}]
+    transition: fragment
+  fragment:
+    id: fragment
+    kind: fragment
+    fragment: 'LOCAL BULLETIN / 17 JULY 2041 / 03:12'
+    text: 'The city has voted to keep the night open. Libraries, kitchens and shaded courtyards will remain accessible until sunrise. For the third summer, most outdoor work will begin after dark.'
+    interruption: 'One line in the archive has been overwritten: THIS WAS NOT INEVITABLE.'
+    question: 'You recognise the words. The place feels unfamiliar.'
+    choices: [{id: look, label: 'Stay with the fragment'}]
+    transition: here
+  here:
+    id: here
+    kind: question
+    text: 'A city reorganised around the hours it can bear to be outside. An ordinary announcement from a world that is not quite yours.'
+    question: 'How did we get HERE?'
+    choices:
+      - {id: happened, label: 'What happened?'}
+      - {id: whose, label: 'Whose future is this?'}
+      - {id: doubt, label: 'I do not believe this future'}
+    transition: emotion
+  emotion:
+    id: emotion
+    kind: emotion_consent
+    text: 'This game can react to how you feel. For this prototype, you can name a feeling and the system will acknowledge it. No feelings are inferred.'
+    question: 'Do you want emotions to be part of the game?'
+    choices:
+      - {id: 'yes', label: 'YES', value: 'yes'}
+      - {id: 'no', label: 'NO', value: 'no'}
+      - {id: later, label: 'MAYBE LATER', value: later}
+    transition: sound
+  sound:
+    id: sound
+    kind: audio_consent
+    text: 'Sound is optional. Everything you need is also on the screen. This build has no soundtrack yet; authorised music can be added later.'
+    question: 'Enable the soundtrack when one is available?'
+    choices:
+      - {id: 'yes', label: 'Enable sound', value: true}
+      - {id: 'no', label: 'Continue in silence', value: false}
+    transition: time
+  time:
+    id: time
+    kind: question
+    text: 'The fragment claims to be from 2041. That is its coordinate, not yours. Let us establish where you are reading from. Approximate answers are enough.'
+    question: 'What year does your present feel like — and why?'
+    input: {label: 'Your time coordinate', required: true, coordinate: time, placeholder: 'A year, a period, or a moment you are living through…'}
+    emotion: true
+    choices: [{id: set, label: 'Establish contact'}]
+    transition: place
+  place:
+    id: place
+    kind: question
+    text: 'Contact established. Now we need a place and a point of view. You can use an imagined place; no name or exact address is needed.'
+    question: 'Where are you reading from, and what part of everyday life makes you notice change there?'
+    input: {label: 'Your place and experience', required: true, coordinate: place_experience, placeholder: 'A neighbourhood, a landscape, a daily routine…'}
+    choices: [{id: locate, label: 'Fix these coordinates'}]
+    transition: statement
+  statement:
+    id: statement
+    kind: narrative
+    fragment: 'ARCHIVE NOTE / ATTRIBUTION MISSING'
+    text: 'By 2041, this city treats cool space as a shared necessity. The bulletin does not say who maintains it, who gets access, or who still works through the heat. Someone made choices. Someone carried their costs.'
+    question: 'Which part of this account would you examine first?'
+    emotion: true
+    choices:
+      - {id: access, label: 'Who gets access?'}
+      - {id: work, label: 'Who does the work?'}
+      - {id: power, label: 'Who decided?'}
+      - {id: premise, label: 'Challenge the whole premise'}
+    transition: there
+  there:
+    id: there
+    kind: question
+    text: 'You have a present to stand in and a future to question. The space between them is still blank. There is no official explanation hidden behind this screen.'
+    question: 'How do you think we got THERE?'
+    input: {label: 'One possible turning point', required: true, placeholder: 'Describe an event, a decision, a refusal, or a slow change…'}
+    emotion: true
+    choices: [{id: propose, label: 'Place this turning point on the path'}]
+    transition: intervention
+  intervention:
+    id: intervention
+    kind: question
+    text: 'Your turning point is now part of this possible path. You can strengthen it, interrupt it, or redirect it. You do not have to endorse this future.'
+    question: 'What first move would you make from your present? Who or what would it affect, and what might resist it?'
+    input: {label: 'Your first intervention', required: true, placeholder: 'I would… This would affect… The difficulty might be…'}
+    emotion: true
+    choices: [{id: intervene, label: 'Commit this possibility'}]
+    transition: end
+  end:
+    id: end
+    kind: end
+    text: 'The archive now contains a possibility it did not have before: yours. This is where the opening ends. The path remains unfinished.'
+    question: 'Take your trajectory with you.'
+    choices: []

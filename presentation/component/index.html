@@ -1,0 +1,16 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+body{margin:0;background:transparent;color:var(--fg);font-family:var(--font);line-height:1.65}button{background:transparent;color:inherit;border:1px solid var(--muted);padding:6px 12px;cursor:pointer;font:inherit}#text{white-space:pre-wrap;font-size:20px}audio{width:100%}small{display:block;margin:8px 0}
+</style></head><body><div id="root"></div><script>
+const send=(type,rest={})=>parent.postMessage({isStreamlitMessage:true,type,...rest},'*');
+const root=document.getElementById('root');let identity='',timer;
+function resize(){send('streamlit:setFrameHeight',{height:document.body.scrollHeight+10});}
+new ResizeObserver(resize).observe(document.body);
+window.addEventListener('message',e=>{if(e.data.type!=='streamlit:render')return;const a=e.data.args;
+document.body.style.setProperty('--fg',a.theme.foreground);document.body.style.setProperty('--muted',a.theme.muted);document.body.style.setProperty('--font',a.theme.font);
+if(a.mode==='audio'){
+ if(identity!==a.track_id){identity=a.track_id;root.replaceChildren();const el=document.createElement('audio');el.controls=true;el.preload='metadata';el.src=a.src;el.setAttribute('aria-label',a.title);root.append(el);const credit=document.createElement('small');credit.textContent=a.credit;root.append(credit);}resize();return;
+}
+if(identity===a.identity)return;identity=a.identity;clearInterval(timer);root.replaceChildren();const p=document.createElement('div');p.id='text';p.setAttribute('aria-label',a.text);const visible=document.createElement('span');visible.setAttribute('aria-hidden','true');p.append(visible);const b=document.createElement('button');b.textContent='Show all text';b.setAttribute('aria-label','Complete text immediately');root.append(p,b);let i=0;const chars=Array.from(a.text);function finish(){clearInterval(timer);visible.textContent=a.text;b.hidden=true;resize();}b.onclick=finish;
+if(a.speed<=0||matchMedia('(prefers-reduced-motion: reduce)').matches)finish();else timer=setInterval(()=>{i+=2;visible.textContent=chars.slice(0,i).join('');if(i>=chars.length)finish();},Math.max(1,a.speed*2));resize();
+});send('streamlit:componentReady',{apiVersion:1});
+</script></body></html>

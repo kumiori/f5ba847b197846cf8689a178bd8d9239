@@ -1,0 +1,9 @@
+font: "'Courier New', monospace"
+background: '#101211'
+foreground: '#f0f2e9'
+muted: '#b8bdb2'
+accent: '#d5ff64'
+width: 760
+spacing: 1.4
+glitch_intensity: 1
+text_speed_ms: 18
